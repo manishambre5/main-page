@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Badge } from './components/ui/badge';
 import { ArrowUpRightIcon, StarIcon } from '@phosphor-icons/react';
-import { Item, ItemActions, ItemContent, ItemGroup, ItemTitle } from './components/ui/item';
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemTitle } from './components/ui/item';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function Feed() {
 
@@ -10,11 +11,6 @@ export function Feed() {
         tfa?: { titles: { normalized: string }; extract: string };
         mostread?: { articles: Array<{ title: string; views: number }> };
         news?: Array<{ story: string }>;
-    }
-
-    interface NewsItem {
-        text: string;
-        links: { label: string; url: string }[];
     }
 
     const [data, setData] = useState<WikiFeed | null>(null);
@@ -33,36 +29,12 @@ export function Feed() {
         .catch(err => console.error("Failed to fetch wiki data:", err));
     }, []);
 
-    //loading alert
-    if (loading) return <div style={{ padding: '20px' }}>Loading Wikipedia Feed...</div>;
-
-    //dealing with fetched html
-    const parseWikiHTML = (html: string): NewsItem => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-
-        //extracting links
-        const linkElements = doc.querySelectorAll('a');
-        const links = Array.from(linkElements).map(a => ({
-            label: a.textContent || '',
-            // convert relative wiki links to absolute links
-            url: a.getAttribute('href')?.startsWith('/') 
-            ? `https://en.wikipedia.org${a.getAttribute('href')}` 
-            : a.getAttribute('href') || ''
-        }));
-
-        // get clean text by stripping the HTML
-        const text = doc.body.textContent || '';
-
-        return { text, links };
-    };
-
   return (
     <div>
-        <div className="flex gap-4 p-4">
+        <div className="flex flex-col gap-4 p-4 w-full">
             
             {/* Main Column */}
-            <section className="flex gap-4">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                 {/* Featured Article Card */}
                 <Card>
                     <CardHeader className="font-bold tracking-wider">
@@ -72,7 +44,9 @@ export function Feed() {
                                 Featured Article
                             </Badge>
                         </CardDescription>
-                        <CardTitle className="text-2xl font-bold text-slate-800">{data?.tfa?.titles.normalized}</CardTitle>
+                        <CardTitle className="text-2xl font-bold text-slate-800">
+                            {loading ? (<Skeleton className='h-4 w-2/3' />) : (data?.tfa?.titles.normalized)}
+                        </CardTitle>
                         <CardAction>
                             <Badge asChild>
                                 <a href='#'>
@@ -83,7 +57,7 @@ export function Feed() {
                         </CardAction>
                     </CardHeader>
                     <CardContent>
-                        <p className="mt-4 text-slate-600 leading-relaxed">{data?.tfa?.extract}</p>
+                        {loading ? (<Skeleton className='w-full h-32' />) : (<p className="mt-4 text-slate-600 leading-relaxed">{data?.tfa?.extract}</p>)}
                     </CardContent>
                 </Card>
 
@@ -93,6 +67,13 @@ export function Feed() {
                         <CardTitle className="text-2xl font-bold text-slate-800">In The News</CardTitle>
                     </CardHeader>
                     <CardContent>
+                        {loading ? (
+                            <div className='flex flex-col gap-4'>
+                                <Skeleton className='w-full h-16' />
+                                <Skeleton className='w-full h-16' />
+                                <Skeleton className='w-full h-16' />
+                            </div>
+                        ) : (
                         <ItemGroup>
                             {data?.news?.map((item, i) => {
                             return (
@@ -108,31 +89,41 @@ export function Feed() {
                             );
                             })}
                         </ItemGroup>
+                        )}
                     </CardContent>
                 </Card>
             </section>
 
             {/* Sidebar */}
-            <aside className="space-y-8">
-            <section className="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
-                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <span className="animate-pulse text-red-500">●</span> Trending Now
-                </h2>
-                <ol className="space-y-4">
-                {data?.mostread?.articles.slice(0, 5).map((art, i) => (
-                    <li key={i} className="group cursor-pointer">
-                    <div className="text-slate-400 text-xs font-mono">0{i + 1}</div>
-                    <div className="font-medium group-hover:text-blue-300 transition-colors">
-                        {art.title.replace(/_/g, ' ')}
-                    </div>
-                    <div className="text-xs text-slate-500 uppercase tracking-tighter">
-                        {art.views.toLocaleString()} readers
-                    </div>
-                    </li>
-                ))}
-                </ol>
+            <section className='w-full'>
+            <Card>
+                <CardHeader className='font-bold tracking-wider'>
+                    <CardTitle className="text-2xl font-bold text-slate-800">Trending Now</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {loading ? (
+                            <div className='flex flex-col gap-4'>
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                            </div>
+                    ) : (
+                    data?.mostread?.articles.slice(0, 5).map((art, i) => (
+                        <Item variant="outline" key={i} className="group cursor-pointer">
+                            <ItemDescription className="text-slate-400 text-xs font-mono">0{i + 1}</ItemDescription>
+                            <ItemTitle className="font-medium group-hover:text-blue-300 transition-colors">
+                                {art.title.replace(/_/g, ' ')}
+                            </ItemTitle>
+                            <ItemDescription className="text-xs text-slate-500 uppercase tracking-tighter">
+                                {art.views.toLocaleString()} readers
+                            </ItemDescription>
+                        </Item>))
+                    )}
+                </CardContent>
+            </Card>
             </section>
-            </aside>
 
         </div>
     </div>
