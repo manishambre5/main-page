@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
+import { Badge } from './components/ui/badge';
+import { ArrowUpRightIcon, StarIcon } from '@phosphor-icons/react';
+import { Item, ItemActions, ItemContent, ItemGroup, ItemTitle } from './components/ui/item';
 
 export function Feed() {
 
@@ -6,6 +10,11 @@ export function Feed() {
         tfa?: { titles: { normalized: string }; extract: string };
         mostread?: { articles: Array<{ title: string; views: number }> };
         news?: Array<{ story: string }>;
+    }
+
+    interface NewsItem {
+        text: string;
+        links: { label: string; url: string }[];
     }
 
     const [data, setData] = useState<WikiFeed | null>(null);
@@ -24,37 +33,84 @@ export function Feed() {
         .catch(err => console.error("Failed to fetch wiki data:", err));
     }, []);
 
+    //loading alert
     if (loading) return <div style={{ padding: '20px' }}>Loading Wikipedia Feed...</div>;
+
+    //dealing with fetched html
+    const parseWikiHTML = (html: string): NewsItem => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        //extracting links
+        const linkElements = doc.querySelectorAll('a');
+        const links = Array.from(linkElements).map(a => ({
+            label: a.textContent || '',
+            // convert relative wiki links to absolute links
+            url: a.getAttribute('href')?.startsWith('/') 
+            ? `https://en.wikipedia.org${a.getAttribute('href')}` 
+            : a.getAttribute('href') || ''
+        }));
+
+        // get clean text by stripping the HTML
+        const text = doc.body.textContent || '';
+
+        return { text, links };
+    };
 
   return (
     <div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex gap-4 p-4">
             
             {/* Main Column */}
-            <div className="md:col-span-2 space-y-8">
-            {/* Featured Article Card */}
-            <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <span className="text-blue-600 font-bold text-sm uppercase tracking-wider">Featured Article</span>
-                <h2 className="text-2xl font-bold mt-2 text-slate-800">{data?.tfa?.titles.normalized}</h2>
-                <p className="mt-4 text-slate-600 leading-relaxed">{data?.tfa?.extract}</p>
-            </section>
+            <section className="flex gap-4">
+                {/* Featured Article Card */}
+                <Card>
+                    <CardHeader className="font-bold tracking-wider">
+                        <CardDescription className='text-muted-foreground text-sm uppercase'>
+                            <Badge variant="outline">
+                                <StarIcon />
+                                Featured Article
+                            </Badge>
+                        </CardDescription>
+                        <CardTitle className="text-2xl font-bold text-slate-800">{data?.tfa?.titles.normalized}</CardTitle>
+                        <CardAction>
+                            <Badge asChild>
+                                <a href='#'>
+                                    Wikipedia
+                                    <ArrowUpRightIcon data-icon="inline-end" />
+                                </a>
+                            </Badge>
+                        </CardAction>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="mt-4 text-slate-600 leading-relaxed">{data?.tfa?.extract}</p>
+                    </CardContent>
+                </Card>
 
-            {/* In The News Card */}
-            <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <span>📰</span> In The News
-                </h2>
-                <ul className="space-y-4">
-                {data?.news?.map((item, i) => (
-                    <li 
-                    key={i} 
-                    className="text-slate-700 border-l-4 border-slate-100 pl-4 hover:border-blue-400 transition-colors"
-                    dangerouslySetInnerHTML={{ __html: item.story }} 
-                    />
-                ))}
-                </ul>
+                {/* In The News Card */}
+                <Card>
+                    <CardHeader className='font-bold tracking-wider'>
+                        <CardTitle className="text-2xl font-bold text-slate-800">In The News</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ItemGroup>
+                            {data?.news?.map((item, i) => {
+                            return (
+                                <Item variant="outline" size="sm" key={i}>
+                                <ItemContent>
+                                    <ItemTitle>
+                                    <span 
+                                        dangerouslySetInnerHTML={{ __html: item.story }} 
+                                    />
+                                    </ItemTitle>
+                                </ItemContent>
+                                </Item>
+                            );
+                            })}
+                        </ItemGroup>
+                    </CardContent>
+                </Card>
             </section>
-            </div>
 
             {/* Sidebar */}
             <aside className="space-y-8">
