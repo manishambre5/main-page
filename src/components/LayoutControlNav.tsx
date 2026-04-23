@@ -1,9 +1,9 @@
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group"
 
-export const Navi = () => {
+export const LayoutControl = () => {
   return (
-    <nav className="p-2 flex justify-end w-full">
-        <ToggleGroup variant="outline" type="single" defaultValue="newspaper">
+    <nav className="p-1 flex justify-end w-full">
+        <ToggleGroup variant="outline" size="sm" type="single" defaultValue="newspaper">
             <ToggleGroupItem value="newspaper" aria-label="Toggle newspaper theme">
                 Newspaper
             </ToggleGroupItem>
