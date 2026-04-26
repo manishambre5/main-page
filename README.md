@@ -10,6 +10,4 @@
 ---
 
 ## To-do list
-- more wikipedia main page content
-- social media feed layout
-- layout toggle
+- more wikipedia content

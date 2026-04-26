@@ -8,16 +8,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function Feed() {
 
     interface WikiFeed {
-        tfa?: { titles: { normalized: string }; extract: string; originalimage?: { source: string }; content_urls: { desktop: { page: string }; }; };
+        tfa?: { titles: { normalized: string }; extract: string; 
+            originalimage?: { source: string }; content_urls: { desktop: { page: string }; };
+        };
         mostread?: { articles: Array<{ title: string; views: number }> };
         news?: Array<{ story: string }>;
-        dyk?: string[];
+        dyk?: Array<{ html: string; text: string }>;
         image?: { description: { text: string }; image: { source: string }; };
+        onthisday: Array<{ text: string; year: number }>;
     }
 
     const [data, setData] = useState<WikiFeed | null>(null);
     const [loading, setLoading] = useState(true);
-    const [dyk, setDyk] = useState<string[]>([]);
 
     useEffect(() => {
         const today = new Date();
@@ -28,45 +30,25 @@ export function Feed() {
         .then(json => {
             setData(json);
             setLoading(false);
-            console.log(json.tfa);
+            console.log(json);
         })
         .catch(err => console.error("Failed to fetch wiki data:", err));
     }, []);
 
-    useEffect(() => {
-        const fetchDYK = async () => {
-            try{
-                const response = await fetch(`https://en.wikipedia.org/w/api.php?action=parse&page=Template:Did_you_know&format=json&origin=*`);
-                const data = await response.json();
-                const html = data.parse.text["*"];
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const listItems = Array.from(doc.querySelectorAll<HTMLLIElement>("ul li")).filter(li => li.innerText.trim().startsWith("..."));
-
-                const facts = listItems.map(li => li.innerHTML);
-                setDyk(facts);
-            } catch (error) {
-                console.error("Error fetching DYK:", error);
-            }
-        };
-
-        fetchDYK();
-    }, []);
-
   return (
     
-        <section className="p-2 grid md:grid-cols-5 gap-2">
+        <section className="p-2 grid grid-cols-1 lg:grid-cols-5 gap-2">
 
             {/* Left-most column */}
-            <section className=''>
+            <section className='flex flex-col gap-2'>
             {/* Trending now card */}
-            <Card>
-                <CardHeader>
+            <Card className='relative max-h-96'>
+                <CardHeader className='z-10'>
                     <CardTitle className="text-2xl font-bold">Trending Now</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="flex md:flex-col gap-4 overflow-x-auto overflow-y-visible md:overflow-x-visible md:overflow-y-auto no-scrollbar">
                     {loading ? (
-                            <div className='flex flex-col gap-4'>
+                            <div className='flex md:flex-col gap-4'>
                                 <Skeleton className='w-full h-8' />
                                 <Skeleton className='w-full h-8' />
                                 <Skeleton className='w-full h-8' />
@@ -74,27 +56,59 @@ export function Feed() {
                                 <Skeleton className='w-full h-8' />
                             </div>
                     ) : (
-                    data?.mostread?.articles.slice(0, 5).map((art, i) => (
-                        <Item variant="outline" key={i} className="group cursor-pointer">
-                            <ItemDescription className="text-slate-400 text-xs font-mono">0{i + 1}</ItemDescription>
-                            <ItemTitle className="font-medium group-hover:text-blue-300 transition-colors">
-                                {art.title.replace(/_/g, ' ')}
+                    data?.mostread?.articles.map((article, i) => (
+                        <Item variant="outline" size="sm" key={i} className="group cursor-pointer shrink-0 w-fit md:w-full h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
+                            <ItemDescription className="text-slate-400 text-xs font-mono">#0{i + 1}</ItemDescription>
+                            <ItemTitle className="font-medium group-hover:text-sky-700 transition-colors">
+                                {article.title.replace(/_/g, ' ')}
                             </ItemTitle>
                             <ItemDescription className="text-xs text-slate-500 uppercase tracking-tighter">
-                                {art.views.toLocaleString()} readers
+                                {article.views.toLocaleString()} readers
                             </ItemDescription>
                         </Item>))
                     )}
                 </CardContent>
+                {/* fade for the sides on small screens */}
+                <div className="absolute pointer-events-none right-0 top-0 h-full w-4 bg-linear-to-l from-white to-transparent md:hidden" />
+                <div className="absolute pointer-events-none left-0 top-0 h-full w-4 bg-linear-to-r from-white to-transparent md:hidden" />
+            </Card>
+
+            {/* On this day card */}
+            <Card className='relative max-h-96'>
+                <CardHeader className='z-10'>
+                    <CardTitle className="text-2xl font-bold">On this day</CardTitle>
+                </CardHeader>
+                <CardContent className="flex md:flex-col gap-4 overflow-x-auto overflow-y-visible md:overflow-x-visible md:overflow-y-auto no-scrollbar">
+                    {loading ? (
+                            <div className='flex md:flex-col gap-4'>
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                                <Skeleton className='w-full h-8' />
+                            </div>
+                    ) : (
+                    data?.onthisday.map((event, i) => (
+                        <Item variant="outline" size="sm" key={i} className="group cursor-pointer shrink-0 w-3/5 md:w-full h-full flex flex-col items-start">
+                            <ItemDescription className="text-slate-400 px-1">{event.year}</ItemDescription>
+                            <ItemTitle className="font-medium group-hover:text-sky-700 transition-colors">
+                                {event.text}
+                            </ItemTitle>
+                        </Item>))
+                    )}
+                </CardContent>
+                {/* fade for the sides on small screens */}
+                <div className="absolute pointer-events-none right-0 top-0 h-full w-4 bg-linear-to-l from-white to-transparent md:hidden" />
+                <div className="absolute pointer-events-none left-0 top-0 h-full w-4 bg-linear-to-r from-white to-transparent md:hidden" />
             </Card>
             </section>
 
 
             {/* Main middle column */}
-            <main className='md:col-span-3 grid md:grid-cols-2 place-items-start gap-4 md:border-x md:px-2'>
+            <main className='lg:col-span-3 grid lg:grid-cols-2 place-items-start gap-2 lg:border-x lg:px-2'>
 
                 {/* Featured Article Image */}
-                <section className='size-full row-span-2 border'>
+                <section className='col-span-2 xl:col-span-1 size-full row-span-2'>
                     {loading ? (<Skeleton className='w-full h-64' />) : (<img
                         src={data?.tfa?.originalimage?.source}
                         alt="Featured Article Image"
@@ -103,7 +117,7 @@ export function Feed() {
                 </section>
 
                 {/* Featured Article Card */}
-                <Card className=''>
+                <Card className='col-span-2 xl:col-span-1'>
                     <CardHeader>
                         <CardDescription className='text-muted-foreground text-sm uppercase'>
                             <Badge variant="outline">
@@ -121,7 +135,7 @@ export function Feed() {
                 </Card>
 
                 {/* Featured Picture */}
-                <Card className="row-span-2">
+                <Card className="row-span-2 col-span-2 xl:col-span-1">
                     <CardHeader>
                         <CardDescription className='text-muted-foreground text-sm uppercase'>
                             <Badge variant="outline">
@@ -141,7 +155,7 @@ export function Feed() {
                 </Card>
 
                 {/* In The News Card */}
-                <Card className=''>
+                <Card className='col-span-2 xl:col-span-1'>
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold">In The News</CardTitle>
                     </CardHeader>
@@ -184,11 +198,11 @@ export function Feed() {
                 </CardHeader>
                 <CardContent>
                     <ItemGroup>
-                        {dyk.map((factHtml, i) => (
+                        {data?.dyk?.map((factHtml, i) => (
                             <Item variant="outline" size="sm" key={i}>
                                 <ItemContent>
                                     <ItemTitle>
-                                        <span dangerouslySetInnerHTML={{ __html: factHtml }}></span>
+                                        <span dangerouslySetInnerHTML={{ __html: factHtml.html }}></span>
                                     </ItemTitle>
                                 </ItemContent>
                             </Item>
