@@ -40,20 +40,20 @@ export function Feed() {
     
         {/* Trending now card */}
         {data?.mostread &&
-        <section className='relative m-2 border border-border p-4 flex gap-4'>
+        <section className='relative mx-2 mt-2 border border-border p-4 flex gap-4'>
             <div className='text-nowrap relative w-fit'>
-                <p className="text-2xl font-bold">Trending Now</p>
-                <div className="absolute pointer-events-none -right-12 top-0 h-full w-8 bg-linear-to-r from-white to-transparent" />
+                <p className="text-xl font-semibold border-r-2 pr-2 uppercase">Trending Now</p>
+                <div className="absolute pointer-events-none -right-8 top-0 h-full w-8 bg-linear-to-r from-white to-transparent" />
             </div>
             <div className="flex-1 flex gap-4 overflow-x-auto overflow-y-visible no-scrollbar">
                 {loading ? (
-                        <div className='flex gap-4'>
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                        </div>
+                    <div className='flex gap-4'>
+                        <Skeleton className='w-24 h-full' />
+                        <Skeleton className='w-24 h-full' />
+                        <Skeleton className='w-24 h-full' />
+                        <Skeleton className='w-24 h-full' />
+                        <Skeleton className='w-24 h-full' />
+                    </div>
                 ) : (
                 data?.mostread?.articles.map((article, i) => (
                     <Item variant="outline" size="sm" key={i} className="group cursor-pointer shrink-0 w-fit md:w-full h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
@@ -77,12 +77,13 @@ export function Feed() {
             {/* Left-most column */}
             <section className='order-2 md:order-1 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
             {/* On this day card */}
-            <Card className='relative max-h-96 md:max-h-screen'>
+            <Card className='relative max-h-96 md:max-h-screen gap-0'>
                 <CardHeader className='relative'>
-                    <CardTitle className="text-2xl font-bold">On this day</CardTitle>
-                    <div className="absolute pointer-events-none right-0 -bottom-12 w-full h-8 bg-linear-to-b from-white to-transparent hidden md:block" />
+                    <CardTitle className="text-2xl font-bold border-b italic">On this day</CardTitle>
+                    <div className="z-10 absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
                 </CardHeader>
-                <CardContent className="md:py-4 flex md:flex-col gap-4 overflow-x-auto overflow-y-visible no-scrollbar">
+                <CardContent className="relative overflow-x-auto overflow-y-visible no-scrollbar">
+                    <div className='pt-4 grid md:grid-cols-1 grid-cols-2 gap-4'>
                     {loading ? (
                         <div className='flex md:flex-col gap-4'>
                             <Skeleton className='w-full h-8' />
@@ -93,18 +94,17 @@ export function Feed() {
                         </div>
                     ) : (
                     data?.onthisday.map((event, i) => (
-                        <Item variant="outline" size="sm" key={i} className="group cursor-pointer shrink-0 w-2/3 md:w-full h-fit flex flex-col items-start">
+                        <Item variant="muted" size="sm" key={i} className="group cursor-pointer shrink-0 w-full h- flex flex-col items-start">
                             <ItemDescription className="text-slate-400 px-1">{event.year}</ItemDescription>
                             <ItemTitle className="font-medium group-hover:text-sky-700 transition-colors">
                                 {event.text}
                             </ItemTitle>
                         </Item>))
                     )}
+                    </div>
                 </CardContent>
-                <div className="absolute pointer-events-none left-0 bottom-4 w-full h-8 bg-linear-to-t from-white to-transparent hidden md:block" />
-                {/* fade for the sides on small screens */}
-                <div className="absolute pointer-events-none right-0 top-0 h-full w-8 bg-linear-to-l from-white to-transparent md:hidden" />
-                <div className="absolute pointer-events-none left-0 top-0 h-full w-8 bg-linear-to-r from-white to-transparent md:hidden" />
+                <div className="absolute pointer-events-none left-0 bottom-4 w-full h-8 bg-linear-to-t from-white to-transparent" />
+                
             </Card>
             </section>
 
@@ -158,7 +158,7 @@ export function Feed() {
                 {/* In The News Card */}
                 <Card className='mb-2'>
                     <CardHeader>
-                        <CardTitle className="text-2xl font-bold">In The News</CardTitle>
+                        <CardTitle className="text-2xl font-bold italic">In The News</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {loading ? (
@@ -171,7 +171,7 @@ export function Feed() {
                         <ItemGroup>
                             {data?.news?.map((item, i) => {
                             return (
-                                <Item variant="outline" size="sm" key={i}>
+                                <Item variant="muted" size="sm" key={i} className='border-l-2 border-l-accent-foreground'>
                                 <ItemContent>
                                     <ItemTitle>
                                     <span 
@@ -193,13 +193,13 @@ export function Feed() {
             {/* Right-most column */}
             <section className='order-3 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
             {/* Did you know card */}
-            <Card className='relative max-h-96 md:max-h-screen'>
+            <Card className='relative max-h-96 md:max-h-screen gap-0'>
                 <CardHeader className='relative'>
-                    <CardTitle className="text-2xl font-bold">Did You Know...</CardTitle>
-                    <div className="absolute pointer-events-none right-0 -bottom-12 w-full h-8 bg-linear-to-b from-white to-transparent" />
+                    <CardTitle className="text-2xl font-bold border-b italic">Did You Know...</CardTitle>
+                    <div className="absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
                 </CardHeader>
-                <CardContent className="py-4 overflow-x-auto overflow-y-visible no-scrollbar">
-                    <ItemGroup className=''>
+                <CardContent className="overflow-x-auto overflow-y-visible no-scrollbar">
+                    <ItemGroup className='pt-4'>
                         {loading ? (
                             <div className='flex flex-col gap-4'>
                                 <Skeleton className='w-full h-8' />
@@ -210,7 +210,7 @@ export function Feed() {
                             </div>
                         ) : (
                         data?.dyk?.map((factHtml, i) => (
-                            <Item variant="outline" size="sm" key={i}>
+                            <Item variant="muted" size="sm" key={i}>
                                 <ItemContent>
                                     <ItemTitle>
                                         <span dangerouslySetInnerHTML={{ __html: factHtml.html }}></span>
@@ -220,7 +220,7 @@ export function Feed() {
                         )))}
                     </ItemGroup>
                 </CardContent>
-                <div className="absolute pointer-events-none left-0 bottom-4 w-full h-8 bg-linear-to-t from-white to-transparent" />
+                <div className="absolute pointer-events-none left-0 bottom-4 w-full h-4 bg-linear-to-t from-white to-transparent" />
             </Card>
             </section>
 
