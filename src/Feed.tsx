@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
-import { Badge } from './components/ui/badge';
-import { StarIcon } from '@phosphor-icons/react';
-import { Item, ItemContent, ItemDescription, ItemGroup, ItemTitle } from './components/ui/item';
+import { Item, ItemDescription, ItemTitle } from './components/ui/item';
 import { Skeleton } from '@/components/ui/skeleton';
+import InTheNews from './components/InTheNews';
+import FeaturedPicture from './components/FeaturedPicture';
+import OnThisDay from './components/OnThisDay';
+import FeaturedArticle from './components/FeaturedArticle';
+import DidYouKnow from './components/DidYouKnow';
 
 export function Feed() {
 
     interface WikiFeed {
-        tfa?: { titles: { normalized: string }; extract: string; 
-            originalimage?: { source: string }; content_urls: { desktop: { page: string }; };
+        tfa?: {
+            titles: { normalized: string };
+            extract: string;
+            originalimage?: { source: string };
+            content_urls: { desktop: { page: string }; };
         };
         mostread?: { articles: Array<{ title: string; views: number }> };
         news?: Array<{ story: string }>;
@@ -19,7 +24,7 @@ export function Feed() {
     }
 
     const [data, setData] = useState<WikiFeed | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const today = new Date();
@@ -56,9 +61,9 @@ export function Feed() {
                     </div>
                 ) : (
                 data?.mostread?.articles.map((article, i) => (
-                    <Item variant="outline" size="sm" key={i} className="group cursor-pointer shrink-0 w-fit md:w-full h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
+                    <Item variant="outline" size="sm" key={i} className="cursor-pointer shrink-0 w-fit md:w-full h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
                         <ItemDescription className="text-slate-400 text-xs font-mono">#0{i + 1}</ItemDescription>
-                        <ItemTitle className="font-medium group-hover:text-sky-700 transition-colors">
+                        <ItemTitle className="font-medium text-sm">
                             {article.title.replace(/_/g, ' ')}
                         </ItemTitle>
                         <ItemDescription className="text-xs text-slate-500 uppercase tracking-tighter">
@@ -70,158 +75,36 @@ export function Feed() {
             <div className="absolute pointer-events-none right-0 top-0 h-full w-8 bg-linear-to-l from-white to-transparent" />
         </section>}
 
+
+
         <section className="p-2 flex flex-col md:flex-row gap-2">
-
-
 
             {/* Left-most column */}
             <section className='order-2 md:order-1 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
-            {/* On this day card */}
-            <Card className='relative max-h-96 md:max-h-screen gap-0'>
-                <CardHeader className='relative'>
-                    <CardTitle className="text-2xl font-bold border-b italic">On this day</CardTitle>
-                    <div className="z-10 absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
-                </CardHeader>
-                <CardContent className="relative overflow-x-auto overflow-y-visible no-scrollbar">
-                    <div className='pt-4 grid md:grid-cols-1 grid-cols-2 gap-4'>
-                    {loading ? (
-                        <div className='flex md:flex-col gap-4'>
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                            <Skeleton className='w-full h-8' />
-                        </div>
-                    ) : (
-                    data?.onthisday.map((event, i) => (
-                        <Item variant="muted" size="sm" key={i} className="group cursor-pointer shrink-0 w-full h- flex flex-col items-start">
-                            <ItemDescription className="text-slate-400 px-1">{event.year}</ItemDescription>
-                            <ItemTitle className="font-medium group-hover:text-sky-700 transition-colors">
-                                {event.text}
-                            </ItemTitle>
-                        </Item>))
-                    )}
-                    </div>
-                </CardContent>
-                <div className="absolute pointer-events-none left-0 bottom-4 w-full h-8 bg-linear-to-t from-white to-transparent" />
-                
-            </Card>
+                {/* On this day card */}
+                <OnThisDay loading={loading} onthisday={data?.onthisday} />
             </section>
 
 
             {/* Main middle column */}
             <main className='flex-1 md:order-2 columns-1 lg:columns-2 gap-2'>
 
-                {/* Featured Article Card */}
-                <Card className='mb-2'>
-                    {loading ? (<Skeleton className='w-full h-64' />) : (<img
-                        src={data?.tfa?.originalimage?.source}
-                        alt="Featured Article Image"
-                        className="size-full object-cover"
-                    />)}
-                    <CardHeader>
-                        <CardDescription className='text-muted-foreground text-sm uppercase'>
-                            <Badge variant="outline">
-                                <StarIcon />
-                                Featured Article
-                            </Badge>
-                        </CardDescription>
-                        <CardTitle className="text-2xl font-bold">
-                            {loading ? (<Skeleton className='h-4 w-2/3' />) : <a href={data?.tfa?.content_urls.desktop.page} className='hover:underline'>{data?.tfa?.titles.normalized}</a>}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {loading ? (<Skeleton className='w-full h-32' />) : (<p>{data?.tfa?.extract}</p>)}
-                    </CardContent>
-                </Card>
-
                 {/* Featured Picture */}
-                <Card className='mb-2'>
-                    {loading ? (<Skeleton className='w-full h-64' />) : (
-                    <img src={data?.image?.image.source}
-                        alt="Featured Picture"
-                        className="size-full object-cover"
-                    />)}
-                    <CardHeader>
-                        <CardDescription className='text-muted-foreground text-sm uppercase'>
-                            <Badge variant="outline">
-                                <StarIcon />
-                                Featured Picture
-                            </Badge>
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        {loading ? (<Skeleton className='w-full h-32' />) : (<p>{data?.image?.description.text}</p>)}
-                    </CardContent>
-                </Card>
+                <FeaturedPicture loading={loading} image={data?.image} />
 
                 {/* In The News Card */}
-                <Card className='mb-2'>
-                    <CardHeader>
-                        <CardTitle className="text-2xl font-bold italic">In The News</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {loading ? (
-                            <div className='flex flex-col gap-4'>
-                                <Skeleton className='w-full h-16' />
-                                <Skeleton className='w-full h-16' />
-                                <Skeleton className='w-full h-16' />
-                            </div>
-                        ) : (
-                        <ItemGroup>
-                            {data?.news?.map((item, i) => {
-                            return (
-                                <Item variant="muted" size="sm" key={i} className='border-l-2 border-l-accent-foreground'>
-                                <ItemContent>
-                                    <ItemTitle>
-                                    <span 
-                                        dangerouslySetInnerHTML={{ __html: item.story }} 
-                                    />
-                                    </ItemTitle>
-                                </ItemContent>
-                                </Item>
-                            );
-                            })}
-                        </ItemGroup>
-                        )}
-                    </CardContent>
-                </Card>
+                <InTheNews loading={loading} news={data?.news} />
+
+                {/* Featured Article Card */}
+                <FeaturedArticle loading={loading} tfa={data?.tfa} />
 
             </main>
 
 
             {/* Right-most column */}
             <section className='order-3 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
-            {/* Did you know card */}
-            <Card className='relative max-h-96 md:max-h-screen gap-0'>
-                <CardHeader className='relative'>
-                    <CardTitle className="text-2xl font-bold border-b italic">Did You Know...</CardTitle>
-                    <div className="absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
-                </CardHeader>
-                <CardContent className="overflow-x-auto overflow-y-visible no-scrollbar">
-                    <ItemGroup className='pt-4'>
-                        {loading ? (
-                            <div className='flex flex-col gap-4'>
-                                <Skeleton className='w-full h-8' />
-                                <Skeleton className='w-full h-8' />
-                                <Skeleton className='w-full h-8' />
-                                <Skeleton className='w-full h-8' />
-                                <Skeleton className='w-full h-8' />
-                            </div>
-                        ) : (
-                        data?.dyk?.map((factHtml, i) => (
-                            <Item variant="muted" size="sm" key={i}>
-                                <ItemContent>
-                                    <ItemTitle>
-                                        <span dangerouslySetInnerHTML={{ __html: factHtml.html }}></span>
-                                    </ItemTitle>
-                                </ItemContent>
-                            </Item>
-                        )))}
-                    </ItemGroup>
-                </CardContent>
-                <div className="absolute pointer-events-none left-0 bottom-4 w-full h-4 bg-linear-to-t from-white to-transparent" />
-            </Card>
+                {/* Did you know card */}
+                <DidYouKnow loading={loading} dyk={data?.dyk} />
             </section>
 
         </section>

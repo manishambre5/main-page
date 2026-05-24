@@ -118,3 +118,7 @@
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);   
 }
+
+a {
+    @apply underline hover:text-indigo-700 transition-colors;
+}
