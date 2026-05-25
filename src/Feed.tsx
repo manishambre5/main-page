@@ -7,9 +7,13 @@ import OnThisDay from './components/OnThisDay';
 import FeaturedArticle from './components/FeaturedArticle';
 import DidYouKnow from './components/DidYouKnow';
 
-export function Feed() {
+type FeedProps = {
+    today: Date;
+}
 
-    interface WikiFeed {
+export function Feed( { today }: FeedProps ) {
+
+    type WikiFeed = {
         tfa?: {
             titles: { normalized: string };
             extract: string;
@@ -27,7 +31,6 @@ export function Feed() {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const today = new Date();
         const datePath = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
         
         fetch(`https://en.wikipedia.org/api/rest_v1/feed/featured/${datePath}?origin=*`)

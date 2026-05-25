@@ -6,9 +6,9 @@ import Disclaimer from "./components/Disclaimer";
 
 export default function App() {
 
-  const date = new Date();
+  const today = new Date();
 
-  const formattedDate = date.toLocaleDateString("en-US", {
+  const formattedDate = today.toLocaleDateString("en-US", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -32,7 +32,7 @@ export default function App() {
 
       <Separator />
       
-      <Feed />
+      <Feed today={today} />
       
       <footer className="flex flex-col items-center justify-center w-full p-4 min-h-16 bg-foreground">
         <Button variant="secondary" asChild>

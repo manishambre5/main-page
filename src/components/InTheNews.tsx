@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Item, ItemContent, ItemGroup, ItemHeader } from "./ui/item";
+import { Item, ItemContent, ItemGroup } from "./ui/item";
 import { Skeleton } from "./ui/skeleton";
 import { parser } from "@/utils/parser";
 
@@ -28,9 +28,6 @@ export default function InTheNews( {loading, news}: InTheNewsProps ) {
                     {news?.map((item, i) => {
                     return (
                         <Item variant="muted" size="sm" key={i} className='border-l-2 border-l-accent-foreground'>
-                            <ItemHeader>
-                                {parser(item.story).picture}
-                            </ItemHeader>
                             <ItemContent>
                                 <div className="text-sm">
                                     {parser(item.story).content}
