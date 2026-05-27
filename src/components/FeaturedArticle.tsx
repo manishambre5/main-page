@@ -16,11 +16,15 @@ type FeaturedArticleProps = {
 export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) {
     return (
         <Card className='mb-2'>
-            {loading ? (<Skeleton className='w-full h-56 -mt-4' />) : (<img
-                src={tfa?.originalimage?.source}
-                alt="Featured Article Image"
-                className="size-full object-cover"
-            />)}
+            {tfa?.originalimage && (
+                loading ? (
+                <Skeleton className='w-full h-56 -mt-4' />) : (
+                    <img
+                    src={tfa?.originalimage?.source}
+                    alt="Featured Article Image"
+                    className="size-full object-cover" />
+                )
+            )}
             <CardHeader>
                 <CardDescription className='text-muted-foreground text-sm uppercase'>
                     <Badge variant="outline">

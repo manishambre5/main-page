@@ -48,12 +48,12 @@ export function Feed( { today }: FeedProps ) {
     
         {/* Trending now card */}
         {data?.mostread &&
-        <section className='relative mx-2 mt-2 border border-border p-4 flex gap-4'>
-            <div className='text-nowrap relative w-fit'>
-                <p className="text-xl font-semibold border-r-2 pr-2 uppercase">Trending Now</p>
-                <div className="absolute pointer-events-none -right-8 top-0 h-full w-8 bg-linear-to-r from-white to-transparent" />
+        <section className='relative mx-2 mt-2 border border-border p-2 flex'>
+            <div className='relative w-fit flex items-center'>
+                <p className="text-sm md:text-lg font-semibold border-r pr-2 uppercase">Trending</p>
+                <div className="absolute flex-1 pointer-events-none -right-4 h-12 w-4 bg-linear-to-r from-white to-transparent" />
             </div>
-            <div className="flex-1 flex gap-4 overflow-x-auto overflow-y-visible no-scrollbar">
+            <div className="flex-1 pl-2 flex gap-4 overflow-x-auto overflow-y-visible no-scrollbar">
                 {loading ? (
                     <div className='flex gap-4'>
                         <Skeleton className='w-24 h-full' />
@@ -64,7 +64,7 @@ export function Feed( { today }: FeedProps ) {
                     </div>
                 ) : (
                 data?.mostread?.articles.map((article, i) => (
-                    <Item variant="outline" size="sm" key={i} className="cursor-pointer shrink-0 w-fit md:w-full h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
+                    <Item variant="muted" size="xs" key={i} className="cursor-pointer shrink-0 w-fit h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
                         <ItemDescription className="text-slate-400 text-xs font-mono">#0{i + 1}</ItemDescription>
                         <ItemTitle className="font-medium text-sm">
                             {article.title.replace(/_/g, ' ')}
