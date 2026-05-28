@@ -26,7 +26,7 @@ export default function DidYouKnow ( { loading, dyk }: DidYouKnowProps ) {
                         </>
                     ) : (
                     dyk?.map((factHtml, i) => (
-                        <Item variant="muted" size="sm" key={i}>
+                        <Item variant="muted" size="xs" key={i}>
                             <div className='lg:text-sm'>
                                 {parser(factHtml.html).content}
                             </div>

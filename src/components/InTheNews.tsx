@@ -27,7 +27,7 @@ export default function InTheNews( {loading, news}: InTheNewsProps ) {
                 <ItemGroup>
                     {news?.map((item, i) => {
                     return (
-                        <Item variant="muted" size="sm" key={i} className='border-l-2 border-l-accent-foreground'>
+                        <Item variant="muted" size="xs" key={i} className='border-l-2 border-l-accent-foreground'>
                             <ItemContent>
                                 <div className="text-sm">
                                     {parser(item.story).content}

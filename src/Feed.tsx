@@ -16,14 +16,20 @@ export function Feed( { today }: FeedProps ) {
     type WikiFeed = {
         tfa?: {
             titles: { normalized: string };
-            extract: string;
+            extract_html: string;
             originalimage?: { source: string };
             content_urls: { desktop: { page: string }; };
         };
-        mostread?: { articles: Array<{ title: string; views: number }> };
+        mostread?: {
+            articles: Array<{
+                title: string;
+                views: number;
+                content_urls: { desktop: { page: string } };
+            }>;
+        };
         news?: Array<{ story: string }>;
         dyk?: Array<{ html: string; text: string }>;
-        image?: { description: { text: string }; image: { source: string }; };
+        image?: { description: { text: string }; image: { source: string }; file_page: string };
         onthisday: Array<{ text: string; year: number }>;
     }
 
@@ -44,35 +50,37 @@ export function Feed( { today }: FeedProps ) {
     }, []);
 
   return (
-    <>
+    <div className='flex flex-col gap-2 p-2'>
     
         {/* Trending now card */}
         {data?.mostread &&
-        <section className='relative mx-2 mt-2 border border-border p-2 flex'>
+        <section className='relative ring-1 ring-foreground/10 p-2 flex'>
             <div className='relative w-fit flex items-center'>
                 <p className="text-sm md:text-lg font-semibold border-r pr-2 uppercase">Trending</p>
                 <div className="absolute flex-1 pointer-events-none -right-4 h-12 w-4 bg-linear-to-r from-white to-transparent" />
             </div>
             <div className="flex-1 pl-2 flex gap-4 overflow-x-auto overflow-y-visible no-scrollbar">
                 {loading ? (
-                    <div className='flex gap-4'>
-                        <Skeleton className='w-24 h-full' />
-                        <Skeleton className='w-24 h-full' />
-                        <Skeleton className='w-24 h-full' />
-                        <Skeleton className='w-24 h-full' />
-                        <Skeleton className='w-24 h-full' />
+                    <div className='flex gap-4 w-full'>
+                        <Skeleton className='w-48 shrink-0 h-full' />
+                        <Skeleton className='w-48 shrink-0 h-full' />
+                        <Skeleton className='w-48 shrink-0 h-full' />
+                        <Skeleton className='w-full h-full' />
                     </div>
                 ) : (
                 data?.mostread?.articles.map((article, i) => (
-                    <Item variant="muted" size="xs" key={i} className="cursor-pointer shrink-0 w-fit h-fit flex-nowrap md:flex-wrap md:text-wrap text-nowrap">
+                    <Item variant="muted" size="xs" key={i} className="cursor-pointer shrink-0 size-fit flex-nowrap text-nowrap">
                         <ItemDescription className="text-slate-400 text-xs font-mono">#0{i + 1}</ItemDescription>
-                        <ItemTitle className="font-medium text-sm">
-                            {article.title.replace(/_/g, ' ')}
-                        </ItemTitle>
+                            <ItemTitle className="font-medium text-sm">
+                                <a href={article.content_urls.desktop.page}>
+                                    {article.title.replace(/_/g, ' ')}
+                                </a>
+                            </ItemTitle>
                         <ItemDescription className="text-xs text-slate-500 uppercase tracking-tighter">
                             {article.views.toLocaleString()} readers
                         </ItemDescription>
-                    </Item>))
+                    </Item>
+                    ))
                 )}
             </div>
             <div className="absolute pointer-events-none right-0 top-0 h-full w-8 bg-linear-to-l from-white to-transparent" />
@@ -80,7 +88,7 @@ export function Feed( { today }: FeedProps ) {
 
 
 
-        <section className="p-2 flex flex-col md:flex-row gap-2">
+        <section className="flex flex-col md:flex-row gap-2">
 
             {/* Left-most column */}
             <section className='order-2 md:order-1 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
@@ -111,6 +119,6 @@ export function Feed( { today }: FeedProps ) {
             </section>
 
         </section>
-    </>
+    </div>
   )
 }

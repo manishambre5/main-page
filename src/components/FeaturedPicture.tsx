@@ -8,17 +8,23 @@ type FeaturedPictureProps = {
     image?: {
         description: { text: string };
         image: { source: string };
+        file_page: string;
     };
 };
 
 export default function FeaturedPicture( {loading, image}: FeaturedPictureProps ) {
     return (
-        <Card className='mb-2'>
-            {loading ? (<Skeleton className='w-full h-64 -mt-4' />) : (
-            <img src={image?.image.source}
-                alt="Featured Picture"
-                className="size-full object-cover"
-            />)}
+        <Card className='mb-2 pt-0'>
+            {loading ? (
+                <Skeleton className='w-full h-64' />
+            ) : (
+                <a href={image?.file_page}>
+                    <img src={image?.image.source}
+                        alt="Featured Picture"
+                        className="size-full object-cover"
+                    />
+                </a>
+            )}
             <CardHeader>
                 <CardDescription className='text-muted-foreground text-sm uppercase'>
                     <Badge variant="outline">

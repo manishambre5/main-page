@@ -2,12 +2,13 @@ import { StarIcon } from "@phosphor-icons/react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
+import { parser } from "@/utils/parser";
 
 type FeaturedArticleProps = {
     loading: boolean;
     tfa?: {
         titles: { normalized: string };
-        extract: string;
+        extract_html: string;
         originalimage?: { source: string };
         content_urls: { desktop: { page: string }; };
     };
@@ -18,7 +19,8 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
         <Card className='mb-2'>
             {tfa?.originalimage && (
                 loading ? (
-                <Skeleton className='w-full h-56 -mt-4' />) : (
+                    <Skeleton className='w-full h-56 -mt-4' />
+                ) : (
                     <img
                     src={tfa?.originalimage?.source}
                     alt="Featured Article Image"
@@ -44,7 +46,9 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                         <Skeleton className='w-full h-5' />
                         <Skeleton className='w-full h-5' />
                     </div>
-                ) : (<p>{tfa?.extract}</p>)}
+                ) : (
+                    tfa && <p>{parser(tfa.extract_html).content}</p>
+                )}
             </CardContent>
         </Card>
     );
