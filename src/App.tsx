@@ -22,7 +22,7 @@ export default function App() {
     <div className="flex flex-col">
 
       <header className="w-full p-4 flex flex-col items-center justify-center gap-4">
-        <h1 className="text-7xl font-heading text-foreground font-semibold tracking-tighter">Main Page</h1>
+        <h1 className="text-7xl font-heading text-foreground font-semibold tracking-tight">Main Page</h1>
         <div className="text-sm tracking-tight text-secondary-foreground flex gap-2 items-center">
           <span>English Wikipedia Edition</span>
           <Separator orientation="vertical" />

@@ -11,7 +11,7 @@ type InTheNewsProps = {
 export default function InTheNews( {loading, news}: InTheNewsProps ) {
 
     return (
-        <Card className='mb-2'>
+        <Card className=''>
             <CardHeader>
                 <CardTitle className="text-2xl font-bold italic">In The News</CardTitle>
             </CardHeader>

@@ -16,7 +16,7 @@ type FeaturedArticleProps = {
 
 export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) {
     return (
-        <Card className='mb-2'>
+        <Card className=''>
             {tfa?.originalimage && (
                 loading ? (
                     <Skeleton className='w-full h-56 -mt-4' />

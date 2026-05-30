@@ -14,11 +14,11 @@ type FeaturedPictureProps = {
 
 export default function FeaturedPicture( {loading, image}: FeaturedPictureProps ) {
     return (
-        <Card className='mb-2 pt-0'>
+        <Card className='pt-0 lg:col-span-1 row-span-2'>
             {loading ? (
                 <Skeleton className='w-full h-64' />
             ) : (
-                <a href={image?.file_page}>
+                <a href={image?.file_page} className="flex-1">
                     <img src={image?.image.source}
                         alt="Featured Picture"
                         className="size-full object-cover"
@@ -32,7 +32,7 @@ export default function FeaturedPicture( {loading, image}: FeaturedPictureProps 
                         Featured Picture
                     </Badge>
                 </CardDescription>
-                <CardTitle className='italic text-sm'>
+                <CardTitle className='italic text-sm xl:text-base'>
                     {loading ? (<Skeleton className='w-full h-8' />) : (<p>{image?.description.text}</p>)}
                 </CardTitle>
             </CardHeader>

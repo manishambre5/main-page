@@ -6,32 +6,46 @@ import FeaturedPicture from './components/FeaturedPicture';
 import OnThisDay from './components/OnThisDay';
 import FeaturedArticle from './components/FeaturedArticle';
 import DidYouKnow from './components/DidYouKnow';
+import MoreContent from './components/MoreContent';
 
 type FeedProps = {
     today: Date;
 }
 
-export function Feed( { today }: FeedProps ) {
-
-    type WikiFeed = {
-        tfa?: {
-            titles: { normalized: string };
+type WikiFeed = {
+    tfa?: {
+        titles: { normalized: string };
+        extract_html: string;
+        originalimage?: { source: string };
+        content_urls: { desktop: { page: string }; };
+    };
+    mostread?: {
+        articles: Array<{
+            title: string;
+            views: number;
+            content_urls: { desktop: { page: string } };
             extract_html: string;
-            originalimage?: { source: string };
-            content_urls: { desktop: { page: string }; };
-        };
-        mostread?: {
-            articles: Array<{
-                title: string;
-                views: number;
-                content_urls: { desktop: { page: string } };
-            }>;
-        };
-        news?: Array<{ story: string }>;
-        dyk?: Array<{ html: string; text: string }>;
-        image?: { description: { text: string }; image: { source: string }; file_page: string };
-        onthisday: Array<{ text: string; year: number }>;
-    }
+            originalimage: { source: string };
+        }>;
+    };
+    news?: Array<{ story: string }>;
+    dyk?: Array<{ html: string; text: string }>;
+    image?: { description: { text: string }; image: { source: string }; file_page: string };
+    onthisday: Array<{
+        text: string;
+        year: number;
+        pages: Array<{
+            content_urls: {
+                desktop: { page: string };
+            };
+            extract_html: string;
+            normalizedtitle: string;
+            thumbnail: { source: string };
+        }>;
+    }>;
+}
+
+export function Feed( { today }: FeedProps ) {
 
     const [data, setData] = useState<WikiFeed | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -39,14 +53,30 @@ export function Feed( { today }: FeedProps ) {
     useEffect(() => {
         const datePath = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
         
-        fetch(`https://en.wikipedia.org/api/rest_v1/feed/featured/${datePath}?origin=*`)
-        .then(res => res.json())
+        fetch(`https://en.wikipedia.org/api/rest_v1/feed/featured/${datePath}?origin=*`, {
+            method: 'GET',
+            headers: {
+                // Wikimedia User-Agent Policy
+                'Api-User-Agent': 'main-page/1.0 (contact: manishambre5@gmail.com)'
+            }
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+            return res.json();
+        })
         .then(json => {
             setData(json);
             setLoading(false);
             console.log(json);
         })
-        .catch(err => console.error("Failed to fetch wiki data:", err));
+        .catch(err => {
+            console.error("Failed to fetch wiki data:", err);
+            setLoading(false);
+        });
+
+        // TODO: Caching the response json in localStorage for the day
     }, []);
 
   return (
@@ -88,18 +118,17 @@ export function Feed( { today }: FeedProps ) {
 
 
 
-        <section className="flex flex-col md:flex-row gap-2">
+        <section className="flex-1 flex flex-col md:flex-row gap-2">
 
             {/* Left-most column */}
-            <section className='order-2 md:order-1 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
+            <section className='order-1 w-full md:w-1/5 lg:w-1/6 xl:w-1/7 flex flex-col gap-2'>
                 {/* On this day card */}
                 <OnThisDay loading={loading} onthisday={data?.onthisday} />
             </section>
 
 
             {/* Main middle column */}
-            <main className='flex-1 md:order-2 columns-1 lg:columns-2 gap-2'>
-
+            <main className='flex-1 order-3 md:order-2 grid grid-cols-1 lg:grid-cols-2 gap-2 xl:grid-cols-2'>
                 {/* Featured Picture */}
                 <FeaturedPicture loading={loading} image={data?.image} />
 
@@ -113,12 +142,18 @@ export function Feed( { today }: FeedProps ) {
 
 
             {/* Right-most column */}
-            <section className='order-3 w-full md:w-1/5 lg:w-1/6 flex flex-col gap-2'>
+            <section className='order-2 w-full md:w-1/5 lg:w-1/6 xl:w-1/7 flex flex-col gap-2'>
                 {/* Did you know card */}
                 <DidYouKnow loading={loading} dyk={data?.dyk} />
             </section>
 
         </section>
+
+        {/* More Content Cards (mostread content) */}
+        <div className='columns-1 md:columns-2 lg:columns-3 gap-2'>
+            <MoreContent loading={loading} mostread={data?.mostread} />
+        </div>
+
     </div>
   )
 }
