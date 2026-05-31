@@ -6,7 +6,6 @@ import FeaturedPicture from './components/FeaturedPicture';
 import OnThisDay from './components/OnThisDay';
 import FeaturedArticle from './components/FeaturedArticle';
 import DidYouKnow from './components/DidYouKnow';
-import MoreContent from './components/MoreContent';
 
 type FeedProps = {
     today: Date;
