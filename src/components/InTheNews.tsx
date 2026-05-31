@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Item, ItemContent, ItemDescription, ItemFooter, ItemGroup, ItemHeader, ItemMedia, ItemTitle } from "./ui/item";
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "./ui/item";
 import { Skeleton } from "./ui/skeleton";
 import { parser } from "@/utils/parser";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";

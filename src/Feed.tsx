@@ -147,10 +147,10 @@ export function Feed( { today }: FeedProps ) {
 
         </section>
 
-        {/* More Content Cards (mostread content) */}
+        {/* More Content Cards (mostread content) 
         <div className='columns-1 md:columns-2 lg:columns-3 gap-2'>
             <MoreContent loading={loading} mostread={data?.mostread} />
-        </div>
+        </div>*/}
 
     </div>
   )
