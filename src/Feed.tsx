@@ -25,6 +25,7 @@ type WikiFeed = {
             views: number;
             content_urls: { desktop: { page: string } };
             extract_html: string;
+            description: string;
             originalimage: { source: string };
         }>;
     };
@@ -80,7 +81,7 @@ export function Feed( { today }: FeedProps ) {
     }, []);
 
   return (
-    <div className='flex flex-col gap-2 p-2'>
+    <div className='flex flex-col gap-2 p-2 flex-1 min-h-0'>
     
         {/* Trending now card */}
         {data?.mostread &&
@@ -100,15 +101,12 @@ export function Feed( { today }: FeedProps ) {
                 ) : (
                 data?.mostread?.articles.map((article, i) => (
                     <Item variant="muted" size="xs" key={i} className="cursor-pointer shrink-0 size-fit flex-nowrap text-nowrap">
-                        <ItemDescription className="text-slate-400 text-xs font-mono">#0{i + 1}</ItemDescription>
-                            <ItemTitle className="font-medium text-sm">
-                                <a href={article.content_urls.desktop.page}>
-                                    {article.title.replace(/_/g, ' ')}
-                                </a>
-                            </ItemTitle>
-                        <ItemDescription className="text-xs text-slate-500 uppercase tracking-tighter">
-                            {article.views.toLocaleString()} readers
-                        </ItemDescription>
+                        <ItemDescription className="text-muted-foreground text-xs font-mono">#0{i + 1}</ItemDescription>
+                        <ItemTitle className="font-medium text-sm">
+                            <a href={article.content_urls.desktop.page}>
+                                {article.title.replace(/_/g, ' ')}
+                            </a>
+                        </ItemTitle>
                     </Item>
                     ))
                 )}
@@ -118,22 +116,22 @@ export function Feed( { today }: FeedProps ) {
 
 
 
-        <section className="flex-1 flex flex-col md:flex-row gap-2">
+        <section className="flex-1 flex flex-col md:flex-row gap-2 min-h-0">
 
             {/* Left-most column */}
-            <section className='order-1 w-full md:w-1/5 lg:w-1/6 xl:w-1/7 flex flex-col gap-2'>
+            <section className='order-2 md:order-1 w-full md:w-1/5 lg:w-1/6 xl:w-1/7 flex flex-col gap-2'>
                 {/* On this day card */}
                 <OnThisDay loading={loading} onthisday={data?.onthisday} />
             </section>
 
 
             {/* Main middle column */}
-            <main className='flex-1 order-3 md:order-2 grid grid-cols-1 lg:grid-cols-2 gap-2 xl:grid-cols-2'>
+            <main className='flex-1 order-1 md:order-2 grid grid-cols-1 lg:grid-cols-5 gap-2'>
                 {/* Featured Picture */}
                 <FeaturedPicture loading={loading} image={data?.image} />
 
                 {/* In The News Card */}
-                <InTheNews loading={loading} news={data?.news} />
+                <InTheNews loading={loading} news={data?.news} mostread={data?.mostread} />
 
                 {/* Featured Article Card */}
                 <FeaturedArticle loading={loading} tfa={data?.tfa} />
@@ -142,7 +140,7 @@ export function Feed( { today }: FeedProps ) {
 
 
             {/* Right-most column */}
-            <section className='order-2 w-full md:w-1/5 lg:w-1/6 xl:w-1/7 flex flex-col gap-2'>
+            <section className='order-3 w-full md:w-1/5 lg:w-1/6 xl:w-1/7 flex flex-col gap-2'>
                 {/* Did you know card */}
                 <DidYouKnow loading={loading} dyk={data?.dyk} />
             </section>

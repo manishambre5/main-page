@@ -13,7 +13,7 @@ export default function DidYouKnow ( { loading, dyk }: DidYouKnowProps ) {
         <Card className='relative max-h-screen'>
             <CardHeader className='relative'>
                 <CardTitle className="text-2xl font-bold border-b italic">Did You Know...</CardTitle>
-                <div className="absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
+                <div className="absolute pointer-events-none right-0 -bottom-8 w-full h-4 bg-linear-to-b from-white to-transparent" />
             </CardHeader>
             <CardContent className="overflow-x-auto overflow-y-visible no-scrollbar pb-4">
                 <ItemGroup className='pt-4'>
@@ -27,7 +27,7 @@ export default function DidYouKnow ( { loading, dyk }: DidYouKnowProps ) {
                     ) : (
                     dyk?.map((factHtml, i) => (
                         <Item variant="muted" size="xs" key={i}>
-                            <div className='lg:text-sm'>
+                            <div className='xl:text-sm'>
                                 {parser(factHtml.html).content}
                             </div>
                         </Item>

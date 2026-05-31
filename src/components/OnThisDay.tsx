@@ -9,10 +9,10 @@ type OnThisDayProps = {
 
 export default function OnThisDay ( { loading, onthisday }: OnThisDayProps ) {
     return (
-        <Card className='relative max-h-screen'>
+        <Card className='relative max-h-screen flex-1'>
             <CardHeader className='relative'>
                 <CardTitle className="text-2xl font-bold border-b italic">On this day</CardTitle>
-                <div className="z-10 absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
+                <div className="z-10 absolute pointer-events-none right-0 -bottom-8 w-full h-4 bg-linear-to-b from-white to-transparent" />
             </CardHeader>
             <CardContent className="relative overflow-x-auto overflow-y-visible no-scrollbar pb-4">
                 <div className='pt-4 grid md:grid-cols-1 grid-cols-2 gap-4'>
@@ -27,7 +27,7 @@ export default function OnThisDay ( { loading, onthisday }: OnThisDayProps ) {
                 onthisday?.map((event, i) => (
                     <Item variant="muted" size="xs" key={i} className="cursor-pointer shrink-0 w-full flex flex-col items-start">
                         <ItemDescription className="text-slate-400 px-1">{event.year}</ItemDescription>
-                        <ItemTitle className="font-medium lg:text-sm">
+                        <ItemTitle className="font-medium xl:text-sm">
                             {event.text}
                         </ItemTitle>
                     </Item>))

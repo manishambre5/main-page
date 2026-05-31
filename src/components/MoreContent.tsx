@@ -31,7 +31,7 @@ export default function MoreContent( { loading, mostread }: MoreContentProps ) {
                         ) : (
                             <img
                             src={article.originalimage?.source}
-                            alt="Featured Article Image"
+                            alt="Article Image"
                             className="size-full object-contain md:object-cover -mt-4 md:my-0" />
                         )}
                     </div>

@@ -16,10 +16,10 @@ type FeaturedArticleProps = {
 
 export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) {
     return (
-        <Card className=''>
+        <Card className='pt-0 lg:col-span-2'>
             {tfa?.originalimage && (
                 loading ? (
-                    <Skeleton className='w-full h-56 -mt-4' />
+                    <Skeleton className='w-full h-56' />
                 ) : (
                     <img
                     src={tfa?.originalimage?.source}
@@ -38,7 +38,7 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                     {loading ? (<Skeleton className='h-8 w-2/3' />) : <a href={tfa?.content_urls.desktop.page} className='hover:underline'>{tfa?.titles.normalized}</a>}
                 </CardTitle>
             </CardHeader>
-            <CardContent className='text-sm'>
+            <CardContent>
                 {loading ? (
                     <div className='flex flex-col gap-2'>
                         <Skeleton className='w-full h-5' />
