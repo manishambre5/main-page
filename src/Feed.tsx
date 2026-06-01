@@ -30,7 +30,7 @@ type WikiFeed = {
     };
     news?: Array<{ story: string }>;
     dyk?: Array<{ html: string; text: string }>;
-    image?: { description: { text: string }; image: { source: string }; file_page: string };
+    image: { description: { text: string }; image: { source: string, width: number, height: number }; file_page: string };
     onthisday: Array<{
         text: string;
         year: number;
@@ -125,15 +125,17 @@ export function Feed( { today }: FeedProps ) {
 
 
             {/* Main middle column */}
-            <main className='flex-1 order-1 md:order-2 grid grid-cols-1 lg:grid-cols-5 gap-2'>
+            <main className='flex-1 order-1 md:order-2 flex flex-wrap gap-2'>
                 {/* Featured Picture */}
                 <FeaturedPicture loading={loading} image={data?.image} />
 
+                <section className='flex-1 flex flex-wrap gap-2'>
                 {/* In The News Card */}
                 <InTheNews loading={loading} news={data?.news} mostread={data?.mostread} />
 
                 {/* Featured Article Card */}
                 <FeaturedArticle loading={loading} tfa={data?.tfa} />
+                </section>
 
             </main>
 

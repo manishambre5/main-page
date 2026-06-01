@@ -22,7 +22,7 @@ type InTheNewsProps = {
 export default function InTheNews( {loading, news, mostread}: InTheNewsProps ) {
 
     return (
-        <Card className='lg:col-span-2'>
+        <Card className='flex-1 min-w-64'>
             <Tabs defaultValue="news">
             <CardHeader>
                 <TabsList variant="line">

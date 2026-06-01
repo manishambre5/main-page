@@ -7,14 +7,19 @@ type FeaturedPictureProps = {
     loading: boolean;
     image?: {
         description: { text: string };
-        image: { source: string };
+        image: { source: string, width: number, height: number };
         file_page: string;
     };
 };
 
 export default function FeaturedPicture( {loading, image}: FeaturedPictureProps ) {
     return (
-        <Card className='pt-0 lg:col-span-3 row-span-2'>
+        <Card className={`pt-0 ${
+            (image?.image.width ?? 0) > (image?.image.height ?? 0)
+            ? ("col-span-full")
+            : ("flex-1 min-w-3/5 row-span-2")
+            } `}
+        >
             {loading ? (
                 <Skeleton className='w-full h-64' />
             ) : (
