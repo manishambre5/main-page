@@ -1,8 +1,5 @@
-import { StarIcon } from "@phosphor-icons/react";
-import { Badge } from "./ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
-import { parser } from "@/utils/parser";
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "./ui/item";
 
 type MoreContentProps = {
     loading: boolean;
@@ -12,6 +9,7 @@ type MoreContentProps = {
             views: number;
             content_urls: { desktop: { page: string } };
             extract_html: string;
+            description: string;
             originalimage: { source: string };
         }>;
     };
@@ -19,54 +17,55 @@ type MoreContentProps = {
 
 export default function MoreContent( { loading, mostread }: MoreContentProps ) {
     return (
-        <>
-        {mostread && (
+        <div className="relative flex">
+            <div className="max-w-1/3 text-center py-2 flex relative z-10">
+                <p className="text-2xl italic self-center border-r px-2">Most Read Articles</p>
+                <div className="absolute flex-1 pointer-events-none -right-2 top-0 h-full w-4 bg-linear-to-r from-white to-transparent" />
+            </div>
+            <div className="flex-1 flex gap-2 overflow-y-auto no-scrollbar z-0">
+            {loading ? (
+                <>
+                    <Skeleton className='w-full h-24' />
+                    <Skeleton className='w-full h-24' />
+                    <Skeleton className='w-full h-24' />
+                    <Skeleton className='w-full h-24' />
+                </>
+            ) : (
             <>
-            {mostread?.articles.map((article, i) => (
-                <Card key={i} className='mb-2 md:flex-row md:gap-0'>
-                    {article.originalimage && (
-                    <div className="w-full md:max-w-2/5 md:-my-4">
-                        {loading ? (
-                            <Skeleton className='size-full' />
-                        ) : (
-                            <img
-                            src={article.originalimage?.source}
-                            alt="Article Image"
-                            className="size-full object-contain md:object-cover -mt-4 md:my-0" />
+                {mostread?.articles.slice(0,5).map((item, i) => {
+                return (
+                    <Item variant="muted" size="sm" key={i} className="shrink-0 w-fit">
+                        {item.originalimage && (
+                            loading ? (
+                                <Skeleton className='size-12' />
+                            ) : (
+                                <ItemMedia variant="icon">
+                                    <img
+                                    src={item.originalimage.source}
+                                    alt={item.title}
+                                    className="max-h-16 object-cover"
+                                    />
+                                </ItemMedia>
+                            )
                         )}
-                    </div>
-                    )}
-                    <div className="flex-1 relative">
-                    <CardHeader className="relative">
-                        <CardDescription className='text-muted-foreground text-sm uppercase'>
-                            <Badge variant="outline">
-                                <StarIcon />
-                                Trending
-                            </Badge>
-                        </CardDescription>
-                        <CardTitle className="text-xl font-bold pb-2">
-                            {loading ? (<Skeleton className='h-8 w-2/3' />) : <a href={article.content_urls.desktop.page} className='hover:underline'>
-                                {article.title.replace(/_/g, ' ')}
-                            </a>}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className='text-sm max-h-fit'>
-                        {loading ? (
-                            <div className='flex flex-col gap-2'>
-                                <Skeleton className='w-full h-5' />
-                                <Skeleton className='w-full h-5' />
-                                <Skeleton className='w-full h-5' />
-                                <Skeleton className='w-full h-5' />
-                            </div>
-                        ) : (
-                            <p>{parser(article.extract_html).content}</p>
-                        )}
-                    </CardContent>
-                    </div>
-                </Card>
-            ))}
+                        <ItemContent className="">
+                            <ItemDescription className="text-xs text-muted-foreground uppercase">
+                                {item.views.toLocaleString()} readers
+                            </ItemDescription>
+                            <ItemTitle className="text-base">
+                                <a href={item.content_urls.desktop.page}>
+                                    {item.title.replace(/_/g, ' ')}
+                                </a>
+                            </ItemTitle>
+                            <ItemDescription className="italic">{item.description}</ItemDescription>
+                        </ItemContent>
+                    </Item>
+                );
+                })}
             </>
-        )}
-        </>
-    );
+            )}
+            </div>
+            <div className="absolute flex-1 pointer-events-none right-0 top-0 h-full w-4 bg-linear-to-l from-white to-transparent" />
+        </div>
+    )
 }

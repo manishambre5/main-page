@@ -9,12 +9,12 @@ type OnThisDayProps = {
 
 export default function OnThisDay ( { loading, onthisday }: OnThisDayProps ) {
     return (
-        <Card className='relative max-h-screen'>
+        <Card className='relative gap-0'>
             <CardHeader className='relative'>
                 <CardTitle className="text-2xl font-bold border-b italic">On this day</CardTitle>
-                <div className="z-10 absolute pointer-events-none right-0 -bottom-8 w-full h-4 bg-linear-to-b from-white to-transparent" />
+                <div className="z-10 absolute pointer-events-none right-0 -bottom-4 w-full h-4 bg-linear-to-b from-white to-transparent" />
             </CardHeader>
-            <CardContent className="relative overflow-x-auto overflow-y-visible no-scrollbar pb-4">
+            <CardContent className="relative flex-1 overflow-y-scroll no-scrollbar pb-4">
                 <div className='pt-4 grid md:grid-cols-1 grid-cols-2 gap-4'>
                 {loading ? (
                     <>

@@ -24,7 +24,7 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                     <img
                     src={tfa?.originalimage?.source}
                     alt="Featured Article Image"
-                    className="size-full object-cover" />
+                    className="size-fit object-cover" />
                 )
             )}
             <CardHeader>
