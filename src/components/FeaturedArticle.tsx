@@ -9,14 +9,19 @@ type FeaturedArticleProps = {
     tfa?: {
         titles: { normalized: string };
         extract_html: string;
-        originalimage?: { source: string };
+        originalimage?: { source: string, height: number, width: number };
         content_urls: { desktop: { page: string }; };
     };
 };
 
 export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) {
     return (
-        <Card className='pt-0 flex-1 min-w-80'>
+        <Card className={`flex-1 min-w-2/3 ${
+            (tfa?.originalimage?.width ?? 0) > (tfa?.originalimage?.height ?? 0)
+            ? ("")
+            : ("pb-0 flex-row gap-0")
+            } `}
+        >
             {tfa?.originalimage && (
                 loading ? (
                     <Skeleton className='w-full h-56' />
@@ -24,9 +29,12 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                     <img
                     src={tfa?.originalimage?.source}
                     alt="Featured Article Image"
-                    className="size-fit object-cover" />
+                    className={`size-full object-cover
+                        ${tfa.originalimage.width < tfa.originalimage.height && "max-w-1/2 flex-1"}`}
+                    />
                 )
             )}
+            <div className="flex-1 min-w-1/3 pt-4 flex flex-col gap-2">
             <CardHeader>
                 <CardDescription className='text-muted-foreground text-sm uppercase'>
                     <Badge variant="outline">
@@ -50,6 +58,7 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                     tfa && <p>{parser(tfa.extract_html).content}</p>
                 )}
             </CardContent>
+            </div>
         </Card>
     );
 }

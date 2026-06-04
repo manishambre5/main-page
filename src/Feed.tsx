@@ -16,7 +16,7 @@ type WikiFeed = {
     tfa?: {
         titles: { normalized: string };
         extract_html: string;
-        originalimage?: { source: string };
+        originalimage?: { source: string, height: number, width: number };
         content_urls: { desktop: { page: string }; };
     };
     mostread?: {

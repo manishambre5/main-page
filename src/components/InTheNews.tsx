@@ -16,7 +16,7 @@ export default function InTheNews( {loading, news}: InTheNewsProps ) {
                 <CardTitle className="text-2xl font-bold italic">News</CardTitle>
             </CardHeader>
             <CardContent>
-                {loading ? (
+                {!loading ? (
                     <div className='flex flex-col gap-4'>
                         <Skeleton className='w-full h-12' />
                         <Skeleton className='w-full h-12' />
