@@ -1,7 +1,7 @@
 import { Skeleton } from "./ui/skeleton";
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "./ui/item";
+import { Item, ItemContent, ItemDescription, ItemTitle } from "./ui/item";
 
-type MoreContentProps = {
+type MostReadContentProps = {
     loading: boolean;
     mostread?: {
         articles: Array<{
@@ -15,14 +15,14 @@ type MoreContentProps = {
     };
 };
 
-export default function MoreContent( { loading, mostread }: MoreContentProps ) {
+export default function MostReadContent( { loading, mostread }: MostReadContentProps ) {
     return (
         <div className="relative flex">
-            <div className="max-w-1/3 text-center py-2 flex relative z-10">
-                <p className="text-2xl italic self-center border-r px-2">Most Read Articles</p>
+            <div className="max-w-fit text-center py-2 flex relative z-10">
+                <p className="text-2xl font-bold italic self-center border-r px-2">Most Read Articles</p>
                 <div className="absolute flex-1 pointer-events-none -right-2 top-0 h-full w-4 bg-linear-to-r from-white to-transparent" />
             </div>
-            <div className="flex-1 flex gap-2 overflow-y-auto no-scrollbar z-0">
+            <div className="flex gap-2 overflow-y-auto no-scrollbar z-0">
             {loading ? (
                 <>
                     <Skeleton className='w-full h-24' />
@@ -39,16 +39,14 @@ export default function MoreContent( { loading, mostread }: MoreContentProps ) {
                             loading ? (
                                 <Skeleton className='size-12' />
                             ) : (
-                                <ItemMedia variant="icon">
                                     <img
                                     src={item.originalimage.source}
                                     alt={item.title}
                                     className="max-h-16 object-cover"
                                     />
-                                </ItemMedia>
                             )
                         )}
-                        <ItemContent className="">
+                        <ItemContent>
                             <ItemDescription className="text-xs text-muted-foreground uppercase">
                                 {item.views.toLocaleString()} readers
                             </ItemDescription>

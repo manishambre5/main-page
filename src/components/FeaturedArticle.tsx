@@ -30,11 +30,11 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                     src={tfa?.originalimage?.source}
                     alt="Featured Article Image"
                     className={`size-full object-cover
-                        ${tfa.originalimage.width < tfa.originalimage.height && "max-w-1/2 flex-1"}`}
+                        ${tfa.originalimage.width < tfa.originalimage.height && "min-w-1/2"}`}
                     />
                 )
             )}
-            <div className="flex-1 min-w-1/3 py-4 flex flex-col gap-2">
+            <div className="flx-1 min-w-1/3 py-4 flex flex-col gap-2">
             <CardHeader>
                 <CardDescription className='text-muted-foreground text-sm uppercase'>
                     <Badge variant="outline">
