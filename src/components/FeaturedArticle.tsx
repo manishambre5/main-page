@@ -34,7 +34,7 @@ export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) 
                     />
                 )
             )}
-            <div className="flex-1 min-w-1/3 pt-4 flex flex-col gap-2">
+            <div className="flex-1 min-w-1/3 py-4 flex flex-col gap-2">
             <CardHeader>
                 <CardDescription className='text-muted-foreground text-sm uppercase'>
                     <Badge variant="outline">
