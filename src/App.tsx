@@ -1,8 +1,9 @@
-import { ArrowUpRightIcon } from "@phosphor-icons/react";
+import { ArrowUpRightIcon, ImageIcon, NewspaperIcon } from "@phosphor-icons/react";
 import { Button } from "./components/ui/button";
 import { Feed } from "./Feed";
 import { Separator } from "./components/ui/separator";
 import Disclaimer from "./components/Disclaimer";
+import { ToggleGroup, ToggleGroupItem } from "./components/ui/toggle-group";
 
 export default function App() {
 
@@ -19,7 +20,13 @@ export default function App() {
     <>
     <Disclaimer />
     
+    <ToggleGroup type="single" defaultValue="magazine" size="sm" variant="outline" className="fixed z-10 bg-background bottom-4 right-4">
+      <ToggleGroupItem value="newspaper"><NewspaperIcon /></ToggleGroupItem>
+      <ToggleGroupItem value="magazine"><ImageIcon /></ToggleGroupItem>
+    </ToggleGroup>
+    
     <div className="flex flex-col">
+
 
       <header className="w-full p-4 flex flex-col items-center justify-center gap-4">
         <h1 className="text-7xl font-heading text-foreground font-semibold tracking-tight">Main Page</h1>
