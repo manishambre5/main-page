@@ -25,7 +25,7 @@ export default function OnThisDay ( { loading, onthisday }: OnThisDayProps ) {
                     </>
                 ) : (
                 onthisday?.map((event, i) => (
-                    <Item variant="muted" size="xs" key={i} className="cursor-pointer shrink-0 w-full flex flex-col items-start">
+                    <Item variant="muted" size="xs" key={i} className="shrink-0 w-full flex flex-col items-start">
                         <ItemDescription className="text-slate-400 px-1">{event.year}</ItemDescription>
                         <ItemTitle className="font-medium xl:text-sm">
                             {event.text}

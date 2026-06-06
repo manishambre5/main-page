@@ -5,7 +5,7 @@ import { Separator } from "./components/ui/separator";
 import Disclaimer from "./components/Disclaimer";
 import { ToggleGroup, ToggleGroupItem } from "./components/ui/toggle-group";
 import { useEffect, useState } from "react";
-import { Item, ItemContent, ItemDescription, ItemTitle } from "./components/ui/item";
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "./components/ui/item";
 import { parser } from "./utils/parser";
 import { ViewFinderBorder } from "./components/ui/viewfinderborder";
 import { Badge } from "./components/ui/badge";
@@ -74,6 +74,7 @@ export default function App() {
 	});
 
 	const featPictLandscapeCheck = (data?.image?.image?.width ?? 0) > (data?.image?.image?.height ?? 0);
+	const featArticlePictLandscapeCheck = (data?.tfa?.originalimage?.width ?? 0) > (data?.tfa?.originalimage?.height ?? 0);
 
 	useEffect(() => {
 		const datePath = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
@@ -151,12 +152,14 @@ export default function App() {
 
 		) : (
 
-			<div id="magazine" className="flex justify-center items-center overflow-auto">
-				<div className="relative max-w-300svw max-h-300svh inline-block scale-32 md:scale-100 origin-top">
+			<div id="magazine" className="md:scale-100 scale-[calc(1/3)] origin-top-left">
+
+				{/* Cover page */}
+				<div className="relative max-w-300svw max-h-300svh inline-block">
 					<img
 						src={data?.image.image.source}
 						alt="Featured Picture"
-						className={`block max-w-[300svw] md:max-w-[200svw] lg:max-w-screen`}
+						className={`block max-w-[300svw] md:w-[200svw] lg:max-w-screen`}
 					/>
 					<div className="absolute inset-0 bg-black/20" />
 
@@ -256,6 +259,85 @@ export default function App() {
 
 					</div>
 				</div>
+				
+				{/* Second page */}
+				<div className="max-w-300svw max-h-300svh">
+
+					<div
+						className={`flex ${featArticlePictLandscapeCheck && "flex-col"} items-center gap-4 w-[300svw] md:w-[200svw] lg:w-screen
+						`}
+					>
+						<img
+							src={data?.tfa?.originalimage?.source}
+							alt="Featured Picture"
+							className={`max-w-3/5`}
+						/>
+
+
+						<Item className="flex-1 bg-white/10 flex-col p-12">
+							<ItemDescription className="uppercase">
+								<Badge variant="outline" className="">
+									<StarIcon />
+									Featured Article
+								</Badge>
+							</ItemDescription>
+							<ItemTitle className="text-4xl leading-normal">
+								<a href={data?.tfa?.content_urls.desktop.page} className='hover:underline'>{data?.tfa?.titles.normalized}</a>
+							</ItemTitle>
+							<ItemContent className="text-sm">
+								{data?.tfa && <p>{parser(data?.tfa.extract_html).content}</p>}
+							</ItemContent>
+						</Item>
+					</div>
+
+
+				</div>
+
+				{/* Third page */}
+				<div className="max-w-300svw max-h-300svh">
+
+					<div
+						className={`w-[300svw] md:w-[200svw] lg:w-screen
+						`}
+					>
+						<ItemGroup className="p-4 grid grid-cols-4 gap-4">
+						<p className="text-5xl flex items-center col-span-2 justify-center">Did You Know?</p>
+						{data?.dyk?.map((factHtml, i) => (
+							<Item variant="muted" className="aspect-square text-center" size="xs" key={i}>
+								<div className='text-sm'>
+									{parser(factHtml.html).content}
+								</div>
+							</Item>
+						))}
+						</ItemGroup>
+					</div>
+
+
+				</div>
+
+				{/* Fourth page */}
+				<div className="max-w-300svw max-h-300svh inline-block bg-foreground">
+
+					<div
+						className={`flex w-[300svw] md:w-[200svw] lg:w-screen
+						`}
+					>
+						<p className="text-5xl flex items-center row-span-full justify-center text-center text-accent">On this day...</p>
+						<ItemGroup className="p-4 grid grid-cols-4 grid-rows-4 gap-4">
+						{data?.onthisday?.map((event, i) => (
+							<Item variant="default" size="xs" key={i} className="flex flex-col items-start bg-background">
+								<ItemDescription className="text-slate-400 px-1">{event.year}</ItemDescription>
+								<ItemTitle className="font-medium text-sm">
+									{event.text}
+								</ItemTitle>
+							</Item>
+						))}
+						</ItemGroup>
+					</div>
+
+
+				</div>
+
 			</div>
 
 		)}
