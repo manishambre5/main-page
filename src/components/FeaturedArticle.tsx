@@ -12,14 +12,16 @@ type FeaturedArticleProps = {
         originalimage?: { source: string, height: number, width: number };
         content_urls: { desktop: { page: string }; };
     };
+    featPictLandscapeCheck: boolean;
 };
 
-export default function FeaturedArticle( {loading, tfa}: FeaturedArticleProps ) {
+export default function FeaturedArticle( {loading, tfa, featPictLandscapeCheck}: FeaturedArticleProps ) {
     return (
         <Card className={`flex-1 min-w-2/3 pt-0 ${
-            (tfa?.originalimage?.width ?? 0) > (tfa?.originalimage?.height ?? 0)
-            ? ("")
-            : ("md:pb-0 md:flex-row md:gap-0")
+            (tfa?.originalimage?.width ?? 0) < (tfa?.originalimage?.height ?? 0) // if feat article pic is portrait
+            && (
+                featPictLandscapeCheck && ("md:pb-0 md:flex-row md:gap-0")
+            )
             } `}
         >
             {tfa?.originalimage && (

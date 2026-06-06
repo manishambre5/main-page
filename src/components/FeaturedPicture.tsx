@@ -10,14 +10,15 @@ type FeaturedPictureProps = {
         image: { source: string, width: number, height: number };
         file_page: string;
     };
+    featPictLandscapeCheck: boolean;
 };
 
-export default function FeaturedPicture( {loading, image}: FeaturedPictureProps ) {
+export default function FeaturedPicture( {loading, image, featPictLandscapeCheck}: FeaturedPictureProps ) {
     return (
         <Card className={`pt-0 ${
-            (image?.image.width ?? 0) > (image?.image.height ?? 0)
+            featPictLandscapeCheck
             ? ("col-span-full")
-            : ("flex-1 min-w-3/5 row-span-2")
+            : ("flex-1 min-w-2/3 row-span-2")
             } `}
         >
             {loading ? (
