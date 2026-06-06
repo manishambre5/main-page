@@ -120,5 +120,5 @@
 }
 
 a {
-    @apply underline hover:text-indigo-700 transition-colors;
+    @apply underline hover:text-indigo-500 transition-colors;
 }

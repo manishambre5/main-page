@@ -1,10 +1,14 @@
-import { ArrowUpRightIcon, ImageIcon, NewspaperIcon } from "@phosphor-icons/react";
+import { ArrowUpRightIcon, ImageIcon, NewspaperIcon, StarIcon } from "@phosphor-icons/react";
 import { Button } from "./components/ui/button";
 import { Feed } from "./Feed";
 import { Separator } from "./components/ui/separator";
 import Disclaimer from "./components/Disclaimer";
 import { ToggleGroup, ToggleGroupItem } from "./components/ui/toggle-group";
 import { useEffect, useState } from "react";
+import { Item, ItemContent, ItemDescription, ItemTitle } from "./components/ui/item";
+import { parser } from "./utils/parser";
+import { ViewFinderBorder } from "./components/ui/viewfinderborder";
+import { Badge } from "./components/ui/badge";
 
 type Layout = "newspaper" | "magazine";
 
@@ -27,7 +31,19 @@ export type WikiFeed = {
 	};
 	news?: Array<{ story: string }>;
 	dyk?: Array<{ html: string; text: string }>;
-	image: { description: { text: string }; image: { source: string, width: number, height: number }; file_page: string };
+	image: {
+		description: { text: string, html: string };
+		image: {
+			source: string,
+			width: number,
+			height: number
+		};
+		file_page: string;
+		artist: {
+			text: string,
+			html: string
+		}
+	};
 	onthisday: Array<{
 		text: string;
 		year: number;
@@ -135,26 +151,95 @@ export default function App() {
 
 		) : (
 
-			<div className="flex justify-center items-center">
-				<div className="relative max-w-screen max-h-screen inline-block">
+			<div id="magazine" className="flex justify-center items-center">
+				<div className="relative max-w-200svw max-h-200svh inline-block">
 					<img
 						src={data?.image.image.source}
 						alt="Featured Picture"
-						className="block max-w-screen max-h-screen"
+						className="block max-w-[200svw] max-h-[200svh]"
 					/>
 					<div className="absolute inset-0 bg-black/20" />
 
-					<div className="absolute inset-0 flex flex-col justify-around">
+					<div className="absolute inset-0 flex flex-col m-2 justify-between">
+
 						<header className="w-full p-4 flex flex-col items-center justify-center gap-4">
-							<h1 className="text-7xl font-heading text-background font-semibold tracking-tight">Main Page</h1>
 							<div className="text-sm tracking-tight text-background flex gap-2 items-center">
 								<span>English Wikipedia Edition</span>
 								<Separator orientation="vertical" />
 								<span>{formattedDate}</span>
 							</div>
+							<h1 className="text-9xl font-heading text-background font-semibold tracking-tight">Main Page</h1>
 						</header>
 
-						<p className="text-center text-background">under construction...</p>
+						<p className="text-center text-bold text-background font-mono">(layout under construction...)</p>
+
+						<Item className="max-w-64 text-background w-fit relative bg-white/10">
+							<ViewFinderBorder />
+							<ItemDescription className="uppercase">
+								<Badge variant="outline" className="text-accent">
+									<StarIcon />
+									Featured Article
+								</Badge>
+							</ItemDescription>
+							<ItemTitle className="text-4xl leading-normal">{data?.tfa?.titles.normalized}</ItemTitle>
+						</Item>
+
+						<div className="max-w-64 text-background w-fit self-end relative bg-white/10 p-4">
+							<ViewFinderBorder />
+							<p className="text-right uppercase">
+								<Badge variant="outline" className="text-accent">
+									<StarIcon />
+									Most Read
+								</Badge>
+							</p>
+							{data?.mostread?.articles.slice(0,5).map((article, i) => (
+								<Item size="xs" key={i} className="shrink-0 flex-nowrap text-nowrap text-right justify-end">
+									<ItemTitle className="font-medium text-sm">
+										<a href={article.content_urls.desktop.page}>
+											{article.title.replace(/_/g, ' ')}
+										</a>
+									</ItemTitle>
+									<ItemDescription className="text-accent text-xs font-mono">#0{i + 1}</ItemDescription>
+								</Item>
+								))
+							}
+						</div>
+
+						<div className="max-w-64 text-background w-fit relative bg-white/10 p-4">
+							<ViewFinderBorder />
+							<p className="uppercase">
+								<Badge variant="outline" className="text-accent">
+									<StarIcon />
+									News
+								</Badge>
+							</p>
+							<div className="">
+							{data?.news?.slice(0,2).map((item, i) => {
+							return (
+								<Item size="sm" key={i}>
+									<ItemContent>
+										<div className="lg:text-sm">
+											{parser(item.story).content}
+										</div>
+									</ItemContent>
+								</Item>
+							);
+							})}
+							</div>
+							<p className="text-right">...and more</p>
+						</div>
+
+						<Item className="max-w-96 text-right self-end mt-aut bg-white/10 relative">
+							<ViewFinderBorder />
+							<ItemContent>
+								{data && <>
+									<p className="text-background italic text-sm">{parser(data?.image?.description.html).content}</p>
+									<p className="text-background">By {parser(data?.image.artist.html).content}</p>
+									</>
+								}
+							</ItemContent>
+						</Item>
+
 					</div>
 				</div>
 			</div>
