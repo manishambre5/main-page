@@ -158,11 +158,11 @@ export default function App() {
 						alt="Featured Picture"
 						className={`block max-w-[300svw] md:max-w-[200svw] lg:max-w-screen`}
 					/>
-					<div className="absolute inset-0 h-max w-max bg-black/20" />
+					<div className="absolute inset-0 bg-black/20" />
 
 					<div
-						className={`absolute inset-0 flex flex-col p-2 justify-between gap-2 w-[300svw] md:w-[200svw] lg:w-screen
-						${!featPictLandscapeCheck
+						className={`absolute inset-0 flex flex-col p-2 justify-between gap-2 max-w-[300svw] md:max-w-[200svw] lg:max-w-screen
+						${featPictLandscapeCheck
 							? ("")
 							: ("")
 						}
@@ -240,7 +240,7 @@ export default function App() {
 									}
 								</div>
 
-								<Item className="max-w-1/3 text-right self-end mt-aut bg-white/10 relative">
+								<Item className="max-w-2/3 text-right self-end mt-aut bg-white/10 relative">
 									<ViewFinderBorder />
 									<ItemContent>
 										{data && <>
