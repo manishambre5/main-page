@@ -17,10 +17,10 @@ type FeaturedArticleProps = {
 
 export default function FeaturedArticle( {loading, tfa, featPictLandscapeCheck}: FeaturedArticleProps ) {
     return (
-        <Card className={`flex-1 min-w-2/3 pt-0 ${
+        <Card className={`flex-1 ${tfa?.originalimage ? "min-w-2/3 pt-0" : "min-w-1/2"} ${
             (tfa?.originalimage?.width ?? 0) < (tfa?.originalimage?.height ?? 0) // if feat article pic is portrait
             && (
-                featPictLandscapeCheck && ("md:pb-0 md:flex-row md:gap-0")
+                featPictLandscapeCheck ? ("md:pb-0 md:flex-row md:gap-0 md:items-center") : ("md:py-0 md:gap-0")
             )
             } `}
         >
@@ -36,7 +36,7 @@ export default function FeaturedArticle( {loading, tfa, featPictLandscapeCheck}:
                     />
                 )
             )}
-            <div className="min-w-1/3 md:py-4 flex flex-col gap-2">
+            <div className={`min-w-1/3 ${tfa?.originalimage && ("md:py-4")} flex flex-col gap-2`}>
             <CardHeader>
                 <CardDescription className='text-muted-foreground text-sm uppercase'>
                     <Badge variant="outline">

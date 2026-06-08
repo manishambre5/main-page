@@ -261,17 +261,17 @@ export default function App() {
 				</div>
 				
 				{/* Second page */}
-				<div className="max-w-300svw max-h-300svh">
+				<div className="max-w-300svw max-h-300svh min-h-screen justify-center flex w-max">
 
 					<div
 						className={`flex ${featArticlePictLandscapeCheck && "flex-col"} items-center gap-4 w-[300svw] md:w-[200svw] lg:w-screen
 						`}
 					>
-						<img
+						{data?.tfa?.originalimage && <img
 							src={data?.tfa?.originalimage?.source}
 							alt="Featured Picture"
 							className={`max-w-3/5`}
-						/>
+						/>}
 
 
 						<Item className="flex-1 bg-white/10 flex-col p-12">
